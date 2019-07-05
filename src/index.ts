@@ -1,7 +1,7 @@
 export {
 	App
-} from "./app";
+} from "./app/index";
 
 export {
 	Manifest
-} from "./configuration";
+} from "./configuration/index";
