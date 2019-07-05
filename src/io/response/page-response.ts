@@ -1,6 +1,6 @@
 import {
 	ViewData
-} from "../../views/index";
+} from "../../views";
 
 export class PageResponse {
 

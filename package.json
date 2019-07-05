@@ -1,13 +1,12 @@
 {
   "name": "@imatyushkin/manifest",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "The one configuration file for the entire Node app",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "yarn run build && npm publish --access public"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

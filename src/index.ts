@@ -5,3 +5,11 @@ export {
 export {
 	Manifest
 } from "./configuration/index";
+
+export {
+	CustomResponse,
+	TextResponse,
+	JsonResponse,
+	PageResponse,
+	AnyResponse
+} from "./io/response";
