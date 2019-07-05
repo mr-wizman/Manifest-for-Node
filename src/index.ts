@@ -3,5 +3,5 @@ export {
 } from "./app";
 
 export {
-	Configuration
+	Manifest
 } from "./configuration";
