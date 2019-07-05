@@ -1,14 +1,14 @@
 import express from "express";
 
-import * as configuration from "../configuration";
+import * as configuration from "../configuration/index";
 
-import * as io_request from "../io/request";
+import * as io_request from "../io/request/index";
 
-import * as io_response from "../io/response";
+import * as io_response from "../io/response/index";
 
-import * as viewEngines from "../view-engines";
+import * as viewEngines from "../view-engines/index";
 
-import * as expressVendor from "../vendors/express";
+import * as expressVendor from "../vendors/express/index";
 
 var expressHbs = require("express-hbs");
 

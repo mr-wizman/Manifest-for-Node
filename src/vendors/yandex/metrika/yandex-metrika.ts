@@ -1,6 +1,6 @@
 import {
 	IAnalyticsProvider
-} from "../../../analytics";
+} from "../../../analytics/index";
 
 import {
 	Configuration

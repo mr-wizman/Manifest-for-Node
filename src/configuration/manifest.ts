@@ -1,12 +1,12 @@
-import * as server from "../server";
+import * as server from "../server/index";
 
-import * as request from "../io/request";
+import * as request from "../io/request/index";
 
-import * as routes from "../routes";
+import * as routes from "../routes/index";
 
-import * as viewEngines from "../view-engines";
+import * as viewEngines from "../view-engines/index";
 
-import * as yandexMetrika from "../vendors/yandex/metrika";
+import * as yandexMetrika from "../vendors/yandex/metrika/index";
 
 export type Manifest = {
 	readonly server: {
