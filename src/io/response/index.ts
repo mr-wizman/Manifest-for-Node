@@ -19,5 +19,10 @@ export {
 } from "./page-response";
 
 export {
+	RedirectResponse,
+	isRedirectResponse
+} from "./redirect-response";
+
+export {
 	AnyResponse
 } from "./any-response";

@@ -14,7 +14,12 @@ import {
 	PageResponse
 } from "./page-response";
 
+import {
+	RedirectResponse
+} from "./redirect-response";
+
 export type AnyResponse = CustomResponse
 	| TextResponse
 	| JsonResponse
-	| PageResponse;
+	| PageResponse
+	| RedirectResponse;

@@ -19,6 +19,7 @@ export {
 	TextResponse,
 	JsonResponse,
 	PageResponse,
+	RedirectResponse,
 	AnyResponse
 } from "./io/response";
 

@@ -92,17 +92,23 @@ export class App {
 					jsonResponse.json
 				);	
 			} else if (io_response.isPageResponse(response)) {
-				let pageRendering = response as io_response.PageResponse;
+				let pageResponse = response as io_response.PageResponse;
 
-				if (pageRendering.status) {
+				if (pageResponse.status) {
 					expressIO.response.status(
-						pageRendering.status
+						pageResponse.status
 					);
 				}
 
 				expressIO.response.render(
-					pageRendering.path,
-					pageRendering.data
+					pageResponse.path,
+					pageResponse.data
+				);
+			} else if (io_response.isRedirectResponse(response)) {
+				let redirectResponse = response as io_response.RedirectResponse;
+
+				expressIO.response.redirect(
+					redirectResponse.redirectTo
 				);
 			}
 		};
