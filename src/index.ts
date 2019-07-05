@@ -1,1 +1,7 @@
-console.log("Manifest for Node");
+export {
+	App
+} from "./app";
+
+export {
+	Configuration
+} from "./configuration";
