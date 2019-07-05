@@ -1,4 +1,8 @@
 export {
+	IAnalyticsProvider
+} from "./analytics";
+
+export {
 	App
 } from "./app/index";
 
@@ -7,9 +11,33 @@ export {
 } from "./configuration/index";
 
 export {
+	RequestHandler
+} from "./io/request";
+
+export {
 	CustomResponse,
 	TextResponse,
 	JsonResponse,
 	PageResponse,
 	AnyResponse
 } from "./io/response";
+
+export {
+	Route
+} from "./routes";
+
+export {
+	StaticLocation
+} from "./server";
+
+export {
+	YandexMetrika
+} from "./vendors/yandex/metrika";
+
+export {
+	ViewEngine
+} from "./view-engines";
+
+export {
+	ViewData
+} from "./views";

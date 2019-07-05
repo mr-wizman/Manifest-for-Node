@@ -8,6 +8,8 @@ import * as viewEngines from "../view-engines";
 
 import * as yandexMetrika from "../vendors/yandex/metrika";
 
+import * as handlebars from "../vendors/handlebars";
+
 export type Manifest = {
 	readonly server: {
 		readonly port: number,
@@ -15,7 +17,7 @@ export type Manifest = {
 		readonly requestHandlers: request.RequestHandler[],
 		readonly routes: routes.Route[],
 		readonly viewEngines: {
-			readonly handlebars?: viewEngines.HandlebarsConfiguration
+			readonly handlebars?: handlebars.Configuration
 		},
 		readonly currentViewEngine: viewEngines.ViewEngine
 	},
