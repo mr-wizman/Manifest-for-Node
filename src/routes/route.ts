@@ -1,6 +1,6 @@
 import {
 	AnyResponse
-} from "../response";
+} from "../io/response";
 
 export type Route = {
 	url: string,

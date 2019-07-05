@@ -1,6 +1,6 @@
 import * as server from "../server";
 
-import * as request from "../request";
+import * as request from "../io/request";
 
 import * as routes from "../routes";
 
