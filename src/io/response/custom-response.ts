@@ -1,12 +1,16 @@
 import express from "express";
 
+import {
+	AnyResponse
+} from "./any-response";
+
 export class CustomResponse {
 
 	constructor(
 		public handler: (
 			request: express.Request,
 			response: express.Response
-		) => Response | undefined
+		) => AnyResponse | undefined
 	) {
 	}
 }
