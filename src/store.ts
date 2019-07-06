@@ -10,20 +10,24 @@ type Store = {
 	manifest: Manifest
 };
 
-var defaultManifest = {
+var defaultManifest: Manifest = {
 	server: {
 		port: 3000,
 		staticLocations: [],
 		requestHandlers: [],
 		routes: [
-		{
-			url: `*`,
-			methods: {
-				get: {
-					text: "Built with Manifest library 🎉"
+			{
+				url: `*`,
+				methods: {
+					get: {
+						text: `
+							<h1>
+								Built with Manifest library 🎉
+							</h1>
+						`
+					}
 				}
 			}
-		}
 		],
 		viewEngines: {},
 		currentViewEngine: ViewEngine.handlebars
