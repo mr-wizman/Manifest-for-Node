@@ -1,6 +1,7 @@
 import * as analytics from "../analytics";
 
 export type ViewData = {
-	model: object,
-	analyticsIdentifiers: string[]
+	readonly model: object,
+	readonly analyticsIdentifiers: string[],
+	analyticsHtml: string[]
 };
