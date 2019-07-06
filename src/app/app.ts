@@ -10,18 +10,25 @@ import * as viewEngines from "../view-engines";
 
 import * as expressVendor from "../vendors/express";
 
+import * as store from "../store";
+
+import * as handlebars from "hbs";
+
+import * as handlebarsVendor from "../vendors/handlebars";
+
 var expressHbs = require("express-hbs");
 
 export class App {
+
+	public readonly expressInstance: express.Express = express();
 
 	private router: express.Router = express.Router();
 
 	private requestHandlers: Array<io_request.RequestHandler> = [];
 
-	constructor(
-		public readonly expressInstance: express.Express = express(),
-		public readonly manifest: configuration.Manifest
-	) {
+	private manifest: configuration.Manifest = store.getDefaultManifest();
+
+	constructor() {
 		this.addStaticLocations();
 		this.insertRequestHandlers();
 		this.mountRoutes();
@@ -181,15 +188,32 @@ export class App {
 	private setupViewEngine() {
 		switch (this.manifest.server.currentViewEngine) {
 			case viewEngines.ViewEngine.handlebars: {
-				let handlebarsConfiguration = this.manifest.server.viewEngines.handlebars;
+				handlebarsVendor.registerHelpers();
 
-				if (handlebarsConfiguration) {
-					this.expressInstance.engine(
-						"hbs",
-						expressHbs.express4({
-							partialsDir: handlebarsConfiguration.partialsDir
-						})
-					);
+				let configuration = this.manifest.server.viewEngines.handlebars;
+
+				if (configuration) {
+					let {partialsDir} = configuration;
+
+					if (partialsDir) {
+						this.expressInstance.engine(
+							"hbs",
+							expressHbs.express4({
+								partialsDir: partialsDir
+							})
+						);
+					}
+
+					let {helpers} = configuration;
+
+					if (helpers) {
+						helpers.forEach((helper) => {
+							handlebars.registerHelper(
+								helper.name,
+								helper.function
+							);
+						});
+					}
 				}
 
 				this.expressInstance.set(
