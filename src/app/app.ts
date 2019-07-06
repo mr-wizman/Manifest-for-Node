@@ -8,13 +8,13 @@ import * as io_response from "../io/response";
 
 import * as viewEngines from "../view-engines";
 
+import * as analytics from "../analytics";
+
 import * as expressVendor from "../vendors/express";
 
 import * as store from "../store";
 
 import * as handlebars from "hbs";
-
-import * as handlebarsVendor from "../vendors/handlebars";
 
 var expressHbs = require("express-hbs");
 
@@ -100,6 +100,14 @@ export class App {
 				);	
 			} else if (io_response.isPageResponse(response)) {
 				let pageResponse = response as io_response.PageResponse;
+
+				if (pageResponse.data) {
+					pageResponse.data.analyticsHtml = pageResponse.data.analyticsIdentifiers
+						.map((id) => {
+							return new analytics.AnalyticsRenderer()
+								.getHtmlForSingleAnalytics(id)
+						});
+				}
 
 				if (pageResponse.status) {
 					expressIO.response.status(
@@ -188,32 +196,17 @@ export class App {
 	private setupViewEngine() {
 		switch (this.manifest.server.currentViewEngine) {
 			case viewEngines.ViewEngine.handlebars: {
-				handlebarsVendor.registerHelpers();
-
 				let configuration = this.manifest.server.viewEngines.handlebars;
 
 				if (configuration) {
 					let {partialsDir} = configuration;
 
-					if (partialsDir) {
-						this.expressInstance.engine(
-							"hbs",
-							expressHbs.express4({
-								partialsDir: partialsDir
-							})
-						);
-					}
-
-					let {helpers} = configuration;
-
-					if (helpers) {
-						helpers.forEach((helper) => {
-							handlebars.registerHelper(
-								helper.name,
-								helper.function
-							);
-						});
-					}
+					this.expressInstance.engine(
+						"hbs",
+						expressHbs.express4({
+							partialsDir: partialsDir
+						})
+					);
 				}
 
 				this.expressInstance.set(
