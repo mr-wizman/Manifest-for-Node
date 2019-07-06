@@ -1,3 +1,7 @@
 export type Configuration = {
-	partialsDir: string
+	partialsDir?: string,
+	helpers?: ({
+		name: string,
+		function: ((...args: any[]) => string)
+	})[]
 };

@@ -6,8 +6,6 @@ import * as routes from "../routes";
 
 import * as viewEngines from "../view-engines";
 
-import * as yandexMetrika from "../vendors/yandex/metrika";
-
 import * as handlebars from "../vendors/handlebars";
 
 export type Manifest = {
@@ -22,6 +20,7 @@ export type Manifest = {
 		readonly currentViewEngine: viewEngines.ViewEngine
 	},
 	readonly analytics: {
-		readonly yandexMetrika?: yandexMetrika.Configuration
-	}
+		readonly id: string,
+		readonly html: string
+	}[]
 };
