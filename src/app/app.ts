@@ -62,9 +62,29 @@ export class App {
 			expressIO: expressVendor.InputOutput,
 			ignoreTimeout: boolean
 		) => {
+			// Output request information
+
+			if (this.manifest.logEnabled) {
+				console.log(
+					`${expressIO.request.method.toUpperCase()} ${expressIO.request.originalUrl}\n`,
+					`Query: ${expressIO.request.query}\n`,
+					`Body: ${expressIO.request.body}`
+				);
+			}
+
 			// Wait for timeout if needed
 
 			if (!ignoreTimeout && response.timeout) {
+				let timeout = response.timeout instanceof Function
+					? response.timeout() as number
+					: response.timeout;
+
+				if (this.manifest.logEnabled) {
+					console.log(
+						`Waiting timeout: ${timeout / 1000} seconds`
+					);
+				}
+
 				setTimeout(
 					function() {
 						applyResponse(
@@ -73,7 +93,7 @@ export class App {
 							true
 						);
 					},
-					response.timeout
+					timeout
 				);
 				return;
 			}

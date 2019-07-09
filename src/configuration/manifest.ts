@@ -22,5 +22,6 @@ export type Manifest = {
 	readonly analytics: {
 		readonly id: string,
 		readonly html: string
-	}[]
+	}[],
+	readonly logEnabled?: boolean
 };
