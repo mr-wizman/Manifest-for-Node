@@ -3,7 +3,7 @@ export class TextResponse {
 	constructor(
 		public readonly text: string,
 		public readonly status?: number,
-		public readonly timeout?: number
+		public readonly timeout?: number | (() => number)
 	) {
 	}
 }

@@ -2,7 +2,7 @@ export class RedirectResponse {
 
 	constructor(
 		public readonly redirectTo: string,
-		public readonly timeout?: number
+		public readonly timeout?: number | (() => number)
 	) {
 	}
 }
