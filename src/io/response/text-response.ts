@@ -1,8 +1,9 @@
 export class TextResponse {
 
 	constructor(
-		public text: string,
-		public status?: number
+		public readonly text: string,
+		public readonly status?: number,
+		public readonly timeout?: number
 	) {
 	}
 }

@@ -2,7 +2,8 @@ export class JsonResponse {
 
 	constructor(
 		public json: object,
-		public status?: number
+		public status?: number,
+		public readonly timeout?: number
 	) {
 	}
 }

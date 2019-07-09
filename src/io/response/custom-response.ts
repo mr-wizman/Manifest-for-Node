@@ -7,10 +7,11 @@ import {
 export class CustomResponse {
 
 	constructor(
-		public handler: (
+		public readonly handler: (
 			request: express.Request,
 			response: express.Response
-		) => AnyResponse | undefined
+		) => AnyResponse | undefined,
+		public readonly timeout?: number
 	) {
 	}
 }

@@ -1,7 +1,8 @@
 export class RedirectResponse {
 
 	constructor(
-		public readonly redirectTo: string
+		public readonly redirectTo: string,
+		public readonly timeout?: number
 	) {
 	}
 }

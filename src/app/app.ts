@@ -59,8 +59,27 @@ export class App {
 	private mountRoutes() {
 		let applyResponse = (
 			response: io_response.AnyResponse,
-			expressIO: expressVendor.InputOutput
+			expressIO: expressVendor.InputOutput,
+			ignoreTimeout: boolean
 		) => {
+			// Wait for timeout if needed
+
+			if (!ignoreTimeout && response.timeout) {
+				setTimeout(
+					function() {
+						applyResponse(
+							response,
+							expressIO,
+							true
+						);
+					},
+					response.timeout
+				);
+				return;
+			}
+
+			// Check response type and handle it appropriately
+
 			if (io_response.isCustomResponse(response)) {
 				let customResponse = response as io_response.CustomResponse;
 				let result = customResponse.handler(
@@ -71,7 +90,8 @@ export class App {
 				if (result) {
 					applyResponse(
 						result,
-						expressIO
+						expressIO,
+						true
 					);
 				}
 			} else if (io_response.isTextResponse(response)) {
@@ -133,12 +153,14 @@ export class App {
 				this.router.get(
 					route.url,
 					(request, response) => {
+						let methodHandler = route.methods.get!;
 						applyResponse(
 							route.methods.get!,
 							new expressVendor.InputOutput(
 								request,
 								response
-							)
+							),
+							!methodHandler.timeout
 						);
 					}
 				);
@@ -148,12 +170,14 @@ export class App {
 				this.router.post(
 					route.url,
 					(request, response) => {
+						let methodHandler = route.methods.post!;
 						applyResponse(
-							route.methods.post!,
+							methodHandler,
 							new expressVendor.InputOutput(
 								request,
 								response
-							)
+							),
+							!methodHandler.timeout
 						);
 					}
 				);
@@ -163,12 +187,14 @@ export class App {
 				this.router.put(
 					route.url,
 					(request, response) => {
+						let methodHandler = route.methods.put!;
 						applyResponse(
-							route.methods.put!,
+							methodHandler,
 							new expressVendor.InputOutput(
 								request,
 								response
-							)
+							),
+							!methodHandler.timeout
 						);
 					}
 				);
@@ -178,12 +204,14 @@ export class App {
 				this.router.delete(
 					route.url,
 					(request, response) => {
+						let methodHandler = route.methods.delete!;
 						applyResponse(
-							route.methods.delete!,
+							methodHandler,
 							new expressVendor.InputOutput(
 								request,
 								response
-							)
+							),
+							!methodHandler.timeout
 						);
 					}
 				);
