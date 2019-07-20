@@ -150,7 +150,39 @@ requestHandlers: [
 
 #### `server.routes`
 
-Documentation will be added soon.
+Array of objects. Each object represents a different route. Example:
+
+```typescript
+{
+	routes: [
+		{
+			url: `/`,
+			methods: {
+				get: {
+					text: "Hello!"
+				}
+			}
+		}
+	]
+}
+```
+
+#### `server.routes[0].methods`
+
+The `methods` object can include any of these HTTP methods:
+
+- `get`
+- `post`
+- `put`
+- `delete`
+
+Each HTTP method describes the response to client's request. There are 5 types of response:
+
+- Text (returns simple text)
+- JSON (returns JSON object or array)
+- Page (returns page and data for server-side rendering)
+- Redirect (sends command for redirection to another URL)
+- Custom (arrow function that is implemented by developer and returns any of the 4 types above)
 
 #### `server.viewEngines`
 
