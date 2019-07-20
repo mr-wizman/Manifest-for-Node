@@ -86,9 +86,6 @@ export const manifest: mfst.Manifest = {
 			}
 		],
 		viewEngines: {
-			handlebars: {
-				partialsDir: `${__dirname}/frontend/partials`
-			}
 		},
 		currentViewEngine: mfst.ViewEngine.handlebars
 	},
