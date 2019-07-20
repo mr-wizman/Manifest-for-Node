@@ -46,7 +46,7 @@ let app = new mfst.App().listen();
 
 That's all! Server is started 🚀
 
-For any personal purposes, you can use `Express` instance by calling
+For any personal purposes, you can access `Express` instance by calling
 
 ```typescript
 app.expressInstance
@@ -95,7 +95,7 @@ export const manifest: mfst.Manifest = {
 };
 ```
 
-Above you can see a very simple configuration that is enough to launch a primitive server which will be able to respond to HTTP requests. Now it's time to pass the configuration to `Manifest` app:
+In the above example you can see a very simple configuration that is enough to launch a primitive server which will be able to respond to HTTP requests. Now it's time to pass the configuration to `Manifest` app:
 
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
