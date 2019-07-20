@@ -61,7 +61,7 @@ The easiest way to control what `Manifest` framework does is to declare a specia
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
 
-export const _manifest: mfst.Manifest = {
+export const manifest: mfst.Manifest = {
 	server: {
 		port: environment.port,
 		staticLocations: [],
@@ -114,6 +114,32 @@ new mfst.App().listen();
 Please note that `setDefaultManifest` method **should be called first** before you create new `App` instance.
 
 ### Manifest Sections
+
+#### Port
+
+Documentation will be added soon.
+
+#### Static Locations
+
+Documentation will be added soon.
+
+#### Request Handlers
+
+Documentation will be added soon.
+
+#### Routes
+
+Documentation will be added soon.
+
+#### View Engines
+
+Documentation will be added soon.
+
+#### Current View Engine
+
+Documentation will be added soon.
+
+#### Analytics
 
 Documentation will be added soon.
 
