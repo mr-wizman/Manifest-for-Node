@@ -61,17 +61,17 @@ The easiest way to control what `Manifest` framework does is to declare a specia
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
 
-export const manifest: mfst.Manifest = {
-    server: {
-        port: environment.port,
-        staticLocations: [],
-        requestHandlers: [],
-        routes: [
-            {
+export const _manifest: mfst.Manifest = {
+	server: {
+		port: environment.port,
+		staticLocations: [],
+		requestHandlers: [],
+		routes: [
+			{
 				url: `/`,
 				methods: {
 					get: {
-						text: `<h1>Hello</h1>`
+						text: `<h1>This page is under construction</h1>`,
 					}
 				}
 			},
@@ -79,8 +79,9 @@ export const manifest: mfst.Manifest = {
 				url: `*`,
 				methods: {
 					get: {
-						text: `Page not found`,
-						status: 404
+						text: `<h1>Page not found</h1>`,
+						status: 404,
+						timeout: 20000
 					}
 				}
 			}
