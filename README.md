@@ -54,7 +54,7 @@ app.expressInstance
 
 Quite simple, right? 😉
 
-### Manifest declaration
+### Manifest Declaration
 
 The easiest way to control what `Manifest` framework does is to declare a special manifest file. Let's call it `manifest.ts`:
 
@@ -111,6 +111,10 @@ new mfst.App().listen();
 ```
 
 Please note that `setDefaultManifest` method **should be called first** before you create new `App` instance.
+
+### Manifest Sections
+
+Documentation will be added soon.
 
 ## License
 
