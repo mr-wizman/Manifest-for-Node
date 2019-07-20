@@ -63,7 +63,7 @@ import * as mfst from "@imatyushkin/manifest";
 
 export const manifest: mfst.Manifest = {
 	server: {
-		port: environment.port,
+		port: 3000,
 		staticLocations: [],
 		requestHandlers: [],
 		routes: [
@@ -115,31 +115,44 @@ Please note that `setDefaultManifest` method **should be called first** before y
 
 ### Manifest Sections
 
-#### Port
+#### `server.port`
+
+Port number that server will be listen to.
+
+#### `server.staticLocations`
+
+Array of JSON objects. Each object describes an Express static location.
+
+Example:
+
+```typescript
+{
+	staticLocations: [
+		{
+			alias: `/views`,
+			realPath: `${__dirname}/frontend`
+		}
+	]
+}
+```
+
+#### `server.requestHandlers`
 
 Documentation will be added soon.
 
-#### Static Locations
+#### `server.routes`
 
 Documentation will be added soon.
 
-#### Request Handlers
+#### `server.viewEngines`
 
 Documentation will be added soon.
 
-#### Routes
+#### `server.currentViewEngine`
 
 Documentation will be added soon.
 
-#### View Engines
-
-Documentation will be added soon.
-
-#### Current View Engine
-
-Documentation will be added soon.
-
-#### Analytics
+#### `analytics`
 
 Documentation will be added soon.
 
