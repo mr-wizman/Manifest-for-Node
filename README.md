@@ -1,4 +1,8 @@
 <p align="center">
+    <img src="images/logo.png" alt="Manifest" title="Manifest">
+</p>
+
+<p align="center">
     <a href="https://http://www.android.com">
         <img src="https://img.shields.io/badge/Created for-Node.js-teal.svg?style=flat">
     </a>
