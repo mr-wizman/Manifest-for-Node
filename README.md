@@ -16,7 +16,7 @@
 
 ## At a Glance
 
-`Manifest` is a framework that takes control over Node.js app using a single configuration file.
+`Manifest` is a framework that takes control over Node.js app using a single configuration file. `Manifest` includes `Express` framework and `Handlebars` server-side rendering under the hood.
 
 ## How to Get Started
 
@@ -30,7 +30,33 @@ No special requirements.
 
 ## Usage
 
-Documentation will be added soon.
+### Launch Server
+
+Import Manifest module in your `index.ts`:
+
+```typescript
+import * as mfst from "@imatyushkin/manifest";
+```
+
+Then call `listen` method from `App` instance:
+
+```typescript
+let app = new mfst.App().listen();
+```
+
+That's all! Server is started 🚀
+
+For any personal purposes, you can use `Express` instance by calling
+
+```typescript
+app.expressInstance
+```
+
+Quite simple, right? 😉
+
+### Declare manifest
+
+The easiest way to control
 
 ## License
 
