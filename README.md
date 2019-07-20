@@ -94,7 +94,23 @@ export const manifest: mfst.Manifest = {
 };
 ```
 
-Above you can see a very simple configuration that is enough to launch a primitive server which will be able to respond to HTTP requests.
+Above you can see a very simple configuration that is enough to launch a primitive server which will be able to respond to HTTP requests. Now it's time to pass the configuration to `Manifest` app:
+
+```typescript
+import * as mfst from "@imatyushkin/manifest";
+
+import {
+	manifest
+} from "./manifest";
+
+mfst.setDefaultManifest(
+	manifest
+);
+
+new mfst.App().listen();
+```
+
+Please note that `setDefaultManifest` method **should be called first** before you create new `App` instance.
 
 ## License
 
