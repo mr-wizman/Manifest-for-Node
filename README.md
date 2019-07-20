@@ -121,7 +121,7 @@ Port number that server will be listen to.
 
 #### `server.staticLocations`
 
-Array of JSON objects. Each object describes an Express static location.
+Array of objects. Each object describes an Express static location.
 
 Example:
 
@@ -138,7 +138,15 @@ Example:
 
 #### `server.requestHandlers`
 
-Documentation will be added soon.
+Array of lambda functions. Each function has `request` parameter and handles request before it's processed by `Manifest` framework. You can use handlers for any purpose. For example, sending request information to the console output:
+
+```typescript
+requestHandlers: [
+	(request) => {
+		console.log("Request:", `"${request.url}"`);
+	}
+]
+```
 
 #### `server.routes`
 
