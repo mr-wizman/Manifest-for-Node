@@ -62,12 +62,12 @@ The easiest way to control what `Manifest` framework does is to declare a specia
 import * as mfst from "@imatyushkin/manifest";
 
 export const manifest: mfst.Manifest = {
-	server: {
-		port: environment.port,
-		staticLocations: [],
-		requestHandlers: [],
-		routes: [
-			{
+    server: {
+        port: environment.port,
+        staticLocations: [],
+        requestHandlers: [],
+        routes: [
+            {
 				url: `/`,
 				methods: {
 					get: {
