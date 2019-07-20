@@ -30,7 +30,7 @@ No special requirements.
 
 ## Usage
 
-### Launch Server
+### Launching Server
 
 Import Manifest module in your `index.ts`:
 
@@ -54,9 +54,50 @@ app.expressInstance
 
 Quite simple, right? 😉
 
-### Declare manifest
+### Manifest declaration
 
-The easiest way to control
+The easiest way to control what `Manifest` framework does is to declare a special manifest file. Let's call it `manifest.ts`:
+
+```typescript
+import * as mfst from "@imatyushkin/manifest";
+
+export const manifest: mfst.Manifest = {
+	server: {
+		port: environment.port,
+		staticLocations: [],
+		requestHandlers: [],
+		routes: [
+			{
+				url: `/`,
+				methods: {
+					get: {
+						text: `<h1>Hello</h1>`,
+					}
+				}
+			},
+			{
+				url: `*`,
+				methods: {
+					get: {
+						text: `Page not found`,
+						status: 404
+					}
+				}
+			}
+		],
+		viewEngines: {
+			handlebars: {
+				partialsDir: `${__dirname}/frontend/partials`
+			}
+		},
+		currentViewEngine: mfst.ViewEngine.handlebars
+	},
+	analytics: [
+	]
+};
+```
+
+Above you can see a very simple configuration that is enough to launch a primitive server which will be able to respond to HTTP requests.
 
 ## License
 
