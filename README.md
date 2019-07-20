@@ -70,9 +70,8 @@ export const manifest: mfst.Manifest = {
             {
 				url: `/`,
 				methods: {
-					get: {
-						text: `<h1>Hello</h1>`,
-					}
+				get: {
+					text: `<h1>Hello</h1>`
 				}
 			},
 			{
