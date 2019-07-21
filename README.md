@@ -22,6 +22,10 @@
 
 Type in Terminal:
 
+`npm install --save @imatyushkin/manifest`
+
+or, if you prefer `yarn` over `npm`, type:
+
 `yarn add @imatyushkin/manifest`
 
 ## Requirements
