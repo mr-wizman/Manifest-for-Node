@@ -8,6 +8,8 @@ import * as viewEngines from "../view-engines";
 
 import * as handlebars from "../vendors/handlebars";
 
+import * as socket from "../socket";
+
 export type Manifest = {
 	readonly server: {
 		readonly port: number,
@@ -18,6 +20,11 @@ export type Manifest = {
 			readonly handlebars?: handlebars.Configuration
 		},
 		readonly currentViewEngine: viewEngines.ViewEngine
+	},
+	readonly socket?: {
+		readonly host: string,
+		readonly port: number,
+		readonly events: socket.Event[]
 	},
 	readonly analytics: {
 		readonly id: string,

@@ -1,5 +1,9 @@
 import express from "express";
 
+import http from "http";
+
+import https from "https";
+
 import * as configuration from "../configuration";
 
 import * as io_request from "../io/request";
@@ -26,6 +30,8 @@ export class App {
 
 	private requestHandlers: Array<io_request.RequestHandler> = [];
 
+	private socketServer: http.Server | https.Server | undefined;
+
 	private manifest: configuration.Manifest = store.getDefaultManifest();
 
 	constructor() {
@@ -33,6 +39,9 @@ export class App {
 		this.insertRequestHandlers();
 		this.mountRoutes();
 		this.setupViewEngine();
+		this.setupSocket(
+			this.expressInstance
+		);
 	}
 
 	private addStaticLocations() {
@@ -268,5 +277,58 @@ export class App {
 			}
 		);
 		return this;
+	}
+
+	private setupSocket(
+		expressInstance: express.Express
+	) {
+		if (!this.manifest.socket) {
+			return;
+		}
+
+		this.socketServer = http.createServer(
+			expressInstance
+		);
+
+		let socketIO: SocketIO.Server = require("socket.io")(
+			this.socketServer
+		);
+
+		socketIO.on(
+			"connection",
+			(socket: SocketIO.Socket) => {
+				this.manifest.socket!.events.forEach((event) => {
+					socket.on(
+						event.name,
+						(data) => {
+							event.handler(
+								data,
+								socket
+							);
+						}
+					);
+				});
+			}
+		);
+	}
+
+	public listenSocket(
+		callback?: (port: number) => void
+	) {
+		if (!this.manifest.socket || !this.socketServer) {
+			return;
+		}
+
+		let {port} = this.manifest.socket;
+		this.socketServer.listen(
+			port,
+			() => {
+				if (callback) {
+					callback(
+						port
+					);
+				}
+			}
+		);
 	}
 }

@@ -32,6 +32,17 @@ var defaultManifest: Manifest = {
 		viewEngines: {},
 		currentViewEngine: ViewEngine.handlebars
 	},
+	socket: {
+		host: "http://localhost",
+		port: 12378,
+		events: [
+			{
+				name: "message",
+				handler: (data, socket) => {
+				}
+			}
+		]
+	},
 	analytics: []
 };
 
