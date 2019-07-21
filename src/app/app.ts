@@ -10,6 +10,8 @@ import * as io_request from "../io/request";
 
 import * as io_response from "../io/response";
 
+import * as socketEngine from "../socket";
+
 import * as viewEngines from "../view-engines";
 
 import * as analytics from "../analytics";
@@ -24,13 +26,23 @@ var expressHbs = require("express-hbs");
 
 export class App {
 
+	private static defaultApp: App | null;
+
+	public static getDefaultApp(): App {
+		return this.defaultApp!;
+	}
+
 	public readonly expressInstance: express.Express = express();
 
 	private router: express.Router = express.Router();
 
-	private requestHandlers: Array<io_request.RequestHandler> = [];
+	private requestHandlers: io_request.RequestHandler[] = [];
 
-	private socketServer: http.Server | https.Server | undefined;
+	private socketServer?: http.Server | https.Server;
+
+	private socketIO?: SocketIO.Server;
+
+	private sockets: SocketIO.Socket[] = [];
 
 	private manifest: configuration.Manifest = store.getDefaultManifest();
 
@@ -42,6 +54,10 @@ export class App {
 		this.setupSocket(
 			this.expressInstance
 		);
+
+		if (!App.defaultApp) {
+			App.defaultApp = this;
+		}
 	}
 
 	private addStaticLocations() {
@@ -290,20 +306,35 @@ export class App {
 			expressInstance
 		);
 
-		let socketIO: SocketIO.Server = require("socket.io")(
+		this.socketIO = require("socket.io")(
 			this.socketServer
 		);
 
-		socketIO.on(
+		this.socketIO!.on(
 			"connection",
 			(socket: SocketIO.Socket) => {
+				this.sockets.push(
+					socket
+				);
+
+				socket.on(
+					"disconnect",
+					() => {
+						let index = this.sockets.indexOf(socket);
+						
+						if (index >= 0) {
+							this.sockets.splice(index, 1);
+						}
+					}
+				);
+
 				this.manifest.socket!.events.forEach((event) => {
 					socket.on(
 						event.name,
 						(data) => {
 							event.handler(
 								data,
-								socket
+								socket.id
 							);
 						}
 					);
@@ -330,5 +361,52 @@ export class App {
 				}
 			}
 		);
+	}
+
+	public getSocketIDs(): string[] {
+		return this.sockets
+			.map((socket) => {
+				return socket.id;
+			});
+	}
+
+	public getSocketById(id: string): SocketIO.Socket | null {
+		let index = this.sockets.findIndex((socket) => {
+			return socket.id === id;
+		});
+		return index >= 0 ? this.sockets[index] : null;
+	}
+
+	public sendSocketMessage(message: socketEngine.Message) {
+		if (message.recipients) {
+			let sockets = message.recipients
+				.map((recipient) => {
+					return this.getSocketById(recipient);
+				})
+				.filter((socket) => {
+					return socket != null;
+				});
+			sockets.forEach((socket) => {
+				socket!.emit(
+					message.event,
+					message.data
+				);
+			})
+		} else {
+			if (this.socketIO) {
+				this.socketIO.emit(
+					message.event,
+					message.data
+				);
+			}
+		}
+	}
+
+	public disconnectSocketWithId(id: string) {
+		let socket = this.getSocketById(id);
+
+		if (socket) {
+			socket.disconnect(true);
+		}
 	}
 }

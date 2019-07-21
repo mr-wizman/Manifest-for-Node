@@ -24,7 +24,7 @@ export type Manifest = {
 	readonly socket?: {
 		readonly host: string,
 		readonly port: number,
-		readonly events: socket.Event[]
+		readonly events: socket.EventHandler[]
 	},
 	readonly analytics: {
 		readonly id: string,

@@ -1,3 +1,7 @@
 export {
-	Event
-} from "./event";
+	EventHandler
+} from "./event-handler";
+
+export {
+	Message
+} from "./message";
