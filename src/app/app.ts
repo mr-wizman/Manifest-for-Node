@@ -22,6 +22,11 @@ import * as store from "../store";
 
 import * as handlebars from "hbs";
 
+import {
+	Server as SocketIO_Server,
+	Socket as SocketIO_Socket
+} from "socket.io";
+
 var expressHbs = require("express-hbs");
 
 export class App {
@@ -40,9 +45,9 @@ export class App {
 
 	private socketServer?: http.Server | https.Server;
 
-	private socketIO?: SocketIO.Server;
+	private socketIO?: SocketIO_Server;
 
-	private sockets: SocketIO.Socket[] = [];
+	private sockets: SocketIO_Socket[] = [];
 
 	private manifest: configuration.Manifest = store.getDefaultManifest();
 
@@ -312,7 +317,7 @@ export class App {
 
 		this.socketIO!.on(
 			"connection",
-			(socket: SocketIO.Socket) => {
+			(socket: SocketIO_Socket) => {
 				this.sockets.push(
 					socket
 				);
@@ -370,7 +375,7 @@ export class App {
 			});
 	}
 
-	public getSocketById(id: string): SocketIO.Socket | null {
+	public getSocketById(id: string): SocketIO_Socket | null {
 		let index = this.sockets.findIndex((socket) => {
 			return socket.id === id;
 		});
