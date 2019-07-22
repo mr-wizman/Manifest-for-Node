@@ -1,6 +1,6 @@
 {
   "name": "@imatyushkin/manifest",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "The one configuration file for the entire Node app",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
