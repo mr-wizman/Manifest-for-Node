@@ -3,7 +3,8 @@ export {
 } from "./analytics";
 
 export {
-	App
+	IApp,
+	ExpressApp
 } from "./app/index";
 
 export {

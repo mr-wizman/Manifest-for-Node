@@ -4,6 +4,10 @@ import http from "http";
 
 import https from "https";
 
+import {
+	IApp
+} from "./app.interface";
+
 import * as configuration from "../configuration";
 
 import * as io_request from "../io/request";
@@ -22,31 +26,33 @@ import * as store from "../store";
 
 import * as handlebars from "hbs";
 
-var expressHbs = require("express-hbs");
+export class ExpressApp implements IApp {
 
-export class App {
+	private static defaultInstance: ExpressApp | null;
 
-	private static defaultApp: App | null;
+	public static getInstance(): ExpressApp {
+		if (!this.defaultInstance) {
+			this.defaultInstance = new ExpressApp();
+		}
 
-	public static getDefaultApp(): App {
-		return this.defaultApp!;
+		return this.defaultInstance;
 	}
 
-	public readonly expressInstance: express.Express = express();
+	private readonly expressInstance: express.Express = express();
 
-	private router: express.Router = express.Router();
+	private readonly router: express.Router = express.Router();
 
-	private requestHandlers: io_request.RequestHandler[] = [];
+	private readonly requestHandlers: io_request.RequestHandler[] = [];
 
 	private socketServer?: http.Server | https.Server;
 
 	private socketIO?: SocketIO.Server;
 
-	private sockets: SocketIO.Socket[] = [];
+	private readonly sockets: SocketIO.Socket[] = [];
 
 	private manifest: configuration.Manifest = store.getDefaultManifest();
 
-	constructor() {
+	private constructor() {
 		this.addStaticLocations();
 		this.insertRequestHandlers();
 		this.mountRoutes();
@@ -54,10 +60,6 @@ export class App {
 		this.setupSocket(
 			this.expressInstance
 		);
-
-		if (!App.defaultApp) {
-			App.defaultApp = this;
-		}
 	}
 
 	private addStaticLocations() {
@@ -257,7 +259,7 @@ export class App {
 
 				if (configuration) {
 					let {partialsDir} = configuration;
-
+					var expressHbs = require("express-hbs");
 					this.expressInstance.engine(
 						"hbs",
 						expressHbs.express4({
@@ -280,7 +282,24 @@ export class App {
 
 	public listen(
 		callback?: (port: number) => void
-	): App {
+	): this {
+		let {port} = this.manifest.server;
+		this.expressInstance.listen(
+			port,
+			() => {
+				if (callback) {
+					callback(
+						port
+					);
+				}
+			}
+		);
+		return this;
+	}
+
+	public start(
+		callback?: (port: number) => void
+	): this {
 		let {port} = this.manifest.server;
 		this.expressInstance.listen(
 			port,

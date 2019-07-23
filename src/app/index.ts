@@ -1,3 +1,7 @@
 export {
-	App
-} from "./app";
+	IApp
+} from "./app.interface";
+
+export {
+	ExpressApp
+} from "./express-app";
