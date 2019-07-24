@@ -153,7 +153,7 @@ export class ExpressApp implements IApp {
 				let pageResponse = response as io_response.PageResponse;
 
 				if (pageResponse.data) {
-					pageResponse.data.analyticsHtml = pageResponse.data.analyticsIdentifiers
+					pageResponse.data.analyticsHtml = pageResponse.data.analyticsId
 						.map((id) => {
 							return new analytics.AnalyticsRenderer()
 								.getHtmlForSingleAnalytics(id)
