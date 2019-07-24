@@ -44,7 +44,7 @@ export const manifest: mfst.Manifest = {
 						data: {
 							model: {
 							},
-							analyticsIdentifiers: getAnalyticsIdentifiers()
+							analyticsId: getAnalyticsIdentifiers()
 						},
 						status: 200
 					}
