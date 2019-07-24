@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{{> meta}}
+	{{> css-import}}
+	
+	<!-- Internal CSS -->
+	<link rel="stylesheet" type="text/css" href="/client/views/home/styles/main.css">
+
+	<title>App</title>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div class="container-fluid">
+			<h1>Manifest Demo</h1>
+		</div>
+	</div>
+
+	{{> js-import}}
+
+	<!-- Internal JS -->
+	<script type="text/javascript" src="/client/views/home/js/view-model.js"></script>
+	<script type="text/javascript" src="/client/views/home/js/main.js"></script>
+
+	{{> analytics}}
+</body>
+</html>
