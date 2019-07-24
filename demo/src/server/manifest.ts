@@ -65,18 +65,5 @@ export const manifest: mfst.Manifest = {
 		currentViewEngine: mfst.ViewEngine.handlebars
 	},
 	analytics: [
-		{
-			/*
-				Analytics example.
-			 */
-			id: "yandex-metrika",
-			html: new mfst.YandexMetrika({
-				id: 0,
-				clickmap: true,
-				trackLinks: true,
-				accurateTrackBounce: true,
-				webvisor: true
-			}).getHtml().substring(0, 0)
-		}
 	]
 };
