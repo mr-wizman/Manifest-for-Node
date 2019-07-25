@@ -1,4 +1,4 @@
 export enum ViewEngine {
-	handlebars,
-	none
+	handlebars = "handlebars",
+	none = "none"
 };
