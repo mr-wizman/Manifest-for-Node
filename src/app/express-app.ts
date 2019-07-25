@@ -250,7 +250,18 @@ export class ExpressApp implements IApp {
 			}
 		});
 
-		this.expressInstance.use(`/`, this.router);
+		this.expressInstance.use(
+			express.json()
+		);
+		this.expressInstance.use(
+			express.urlencoded({
+				extended: false
+			})
+		);
+		this.expressInstance.use(
+			`/`,
+			this.router
+		);
 	}
 
 	private setupViewEngine() {
