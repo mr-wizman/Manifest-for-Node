@@ -7,7 +7,7 @@ import {
 } from "./app";
 
 app.start(
-	(port: number) => {
+	(port) => {
 		console.log(
 			`Server is listening on ${port} port`
 		);
