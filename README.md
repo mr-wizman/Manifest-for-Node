@@ -36,19 +36,17 @@ No special requirements.
 
 ### Launching Server
 
-Import Manifest module in your `index.ts`:
+The simplest way to start Express server:
 
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
+
+mfst.ExpressApp.configure().start();
 ```
 
-Then call `listen` method from `App` instance:
+Open [localhost:3000](http://localhost:3000) in your browser. You will see a message saying `Built with Manifest framework`.
 
-```typescript
-let app = new mfst.App().listen();
-```
-
-That's all! Server is started 🚀
+That's all! The server is launched 🚀
 
 For any personal purposes, you can access `Express` instance by calling
 
@@ -58,14 +56,14 @@ app.expressInstance
 
 Quite simple, right? 😉
 
-### Manifest Declaration
+### Server Configuration
 
-The easiest way to control what `Manifest` framework does is to declare a special manifest file. Let's call it `manifest.ts`:
+Now let's learn how to configure our server:
 
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
 
-export const manifest: mfst.Manifest = {
+let app = mfst.ExpressApp.configure({
 	server: {
 		port: 3000,
 		staticLocations: [],
@@ -96,26 +94,12 @@ export const manifest: mfst.Manifest = {
 	},
 	analytics: [
 	]
-};
+});
+
+app.start();
 ```
 
-In the above example you can see a very simple configuration that is enough to launch a primitive server which will be able to respond to HTTP requests. Now it's time to pass the configuration to `Manifest` app:
-
-```typescript
-import * as mfst from "@imatyushkin/manifest";
-
-import {
-	manifest
-} from "./manifest";
-
-mfst.setDefaultManifest(
-	manifest
-);
-
-new mfst.App().listen();
-```
-
-Please note that `setDefaultManifest` method **should be called first** before you create new `App` instance.
+In the above example you can see a very simple configuration that is enough to launch a primitive server which will be able to respond to HTTP requests.
 
 ### Manifest Sections
 
