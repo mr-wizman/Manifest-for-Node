@@ -8,7 +8,9 @@ import {
 	IApp
 } from "./app.interface";
 
-import * as configuration from "../configuration";
+import {
+	Manifest
+} from "../configuration";
 
 import * as io_request from "../io/request";
 
@@ -28,14 +30,12 @@ import * as handlebars from "hbs";
 
 export class ExpressApp implements IApp {
 
-	private static defaultInstance: ExpressApp | null;
-
-	public static getInstance(): ExpressApp {
-		if (!this.defaultInstance) {
-			this.defaultInstance = new ExpressApp();
-		}
-
-		return this.defaultInstance;
+	public static configure(
+		manifest: Manifest | null = null
+	): ExpressApp {
+		return new ExpressApp(
+			manifest ? manifest : store.getDefaultManifest()
+		);
 	}
 
 	private readonly expressInstance: express.Express = express();
@@ -50,9 +50,10 @@ export class ExpressApp implements IApp {
 
 	private readonly sockets: SocketIO.Socket[] = [];
 
-	private manifest: configuration.Manifest = store.getDefaultManifest();
-
-	private constructor() {
+	private constructor(
+		private readonly manifest: Manifest
+	) {
+		this.manifest = manifest ? manifest : store.getDefaultManifest();
 		this.addStaticLocations();
 		this.insertRequestHandlers();
 		this.mountRoutes();
@@ -87,14 +88,14 @@ export class ExpressApp implements IApp {
 		let applyResponse = (
 			response: io_response.AnyResponse,
 			expressIO: expressVendor.InputOutput,
-			ignoreTimeout: boolean
+			ignoreDelay: boolean
 		) => {
-			// Wait for timeout if needed
+			// Wait for delay if needed
 
-			if (!ignoreTimeout && response.timeout) {
-				let timeout = response.timeout instanceof Function
-					? response.timeout() as number
-					: response.timeout;
+			if (!ignoreDelay && response.delay) {
+				let delay = response.delay instanceof Function
+					? response.delay() as number
+					: response.delay;
 
 				setTimeout(
 					function() {
@@ -104,7 +105,7 @@ export class ExpressApp implements IApp {
 							true
 						);
 					},
-					timeout
+					delay
 				);
 				return;
 			}
@@ -191,7 +192,7 @@ export class ExpressApp implements IApp {
 								request,
 								response
 							),
-							!methodHandler.timeout
+							!methodHandler.delay
 						);
 					}
 				);
@@ -208,7 +209,7 @@ export class ExpressApp implements IApp {
 								request,
 								response
 							),
-							!methodHandler.timeout
+							!methodHandler.delay
 						);
 					}
 				);
@@ -225,7 +226,7 @@ export class ExpressApp implements IApp {
 								request,
 								response
 							),
-							!methodHandler.timeout
+							!methodHandler.delay
 						);
 					}
 				);
@@ -242,7 +243,7 @@ export class ExpressApp implements IApp {
 								request,
 								response
 							),
-							!methodHandler.timeout
+							!methodHandler.delay
 						);
 					}
 				);
