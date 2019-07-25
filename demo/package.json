@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "build-manifest": "cd .. && npm run build && cd demo",
+    "build-manifest": "cd .. && rmdir dist /s /q && npm run build && cd demo",
     "build-typescript": "tsc -p ./tsconfig.json",
     "build": "npm run build-manifest && npm run build-typescript && npm run copy",
     "dev": "npm run build-manifest && ts-node src/index.ts",

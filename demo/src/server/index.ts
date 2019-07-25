@@ -3,18 +3,13 @@ import * as mfst from "../../../dist";
 import express from "express";
 
 import {
-	manifest
-} from "./manifest";
+	app
+} from "./app";
 
-mfst.setDefaultManifest(
-	manifest
+app.start(
+	(port: number) => {
+		console.log(
+			`Server is listening on ${port} port`
+		);
+	}
 );
-
-let app = mfst.ExpressApp.getInstance()
-	.start(
-		(port: number) => {
-			console.log(
-				`Server is listening on ${port} port`
-			);
-		}
-	);
