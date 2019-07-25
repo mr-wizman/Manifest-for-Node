@@ -43,8 +43,3 @@ export {
 export {
 	ViewData
 } from "./views";
-
-export {
-	getDefaultManifest,
-	setDefaultManifest
-} from "./store";
