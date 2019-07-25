@@ -1,1 +1,0 @@
-let viewModel = createViewModel("#app");
