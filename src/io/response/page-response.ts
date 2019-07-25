@@ -8,7 +8,7 @@ export class PageResponse {
 		public readonly path: string,
 		public readonly data?: ViewData,
 		public readonly status?: number,
-		public readonly timeout?: number | (() => number)
+		public readonly delay?: number | (() => number)
 	) {
 	}
 }

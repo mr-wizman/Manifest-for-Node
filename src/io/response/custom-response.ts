@@ -11,7 +11,7 @@ export class CustomResponse {
 			request: express.Request,
 			response: express.Response
 		) => AnyResponse | undefined,
-		public readonly timeout?: number | (() => number)
+		public readonly delay?: number | (() => number)
 	) {
 	}
 }
