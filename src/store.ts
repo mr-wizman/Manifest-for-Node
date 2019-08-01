@@ -10,6 +10,7 @@ export const getDefaultManifest: () => Manifest = () => {
 	return {
 		server: {
 			port: 3000,
+			secure: false,
 			staticLocations: [],
 			requestHandlers: [],
 			routes: [

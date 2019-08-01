@@ -13,6 +13,7 @@ import * as socket from "../socket";
 export type Manifest = {
 	readonly server: {
 		readonly port: number,
+		readonly secure: boolean,
 		readonly staticLocations: server.StaticLocation[],
 		readonly requestHandlers: request.RequestHandler[],
 		readonly routes: routes.Route[],
@@ -22,9 +23,6 @@ export type Manifest = {
 		readonly currentViewEngine: viewEngines.ViewEngine
 	},
 	readonly socket?: {
-		readonly host: string,
-		readonly port: number,
-		readonly secure: boolean,
 		readonly events: socket.EventHandler[]
 	},
 	readonly analytics: {

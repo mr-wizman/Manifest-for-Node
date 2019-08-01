@@ -38,22 +38,29 @@ export class ExpressApp implements IApp {
 		);
 	}
 
-	private readonly expressInstance: express.Express = express();
+	private readonly expressInstance: express.Express;
 
-	private readonly router: express.Router = express.Router();
+	private readonly router: express.Router;
 
-	private readonly requestHandlers: io_request.RequestHandler[] = [];
+	private readonly requestHandlers: io_request.RequestHandler[];
 
-	private socketServer?: http.Server | https.Server;
+	private httpServer: http.Server | https.Server;
 
 	private socketIO?: SocketIO.Server;
 
-	private readonly sockets: SocketIO.Socket[] = [];
+	private readonly sockets: SocketIO.Socket[];
 
 	private constructor(
 		private readonly manifest: Manifest
 	) {
-		this.manifest = manifest ? manifest : store.getDefaultManifest();
+		this.expressInstance = express();
+		this.router = express.Router();
+		this.requestHandlers = [];
+		this.httpServer = manifest.server.secure
+			? https.createServer(this.expressInstance)
+			: http.createServer(this.expressInstance);
+		this.sockets = [];
+
 		this.addStaticLocations();
 		this.insertRequestHandlers();
 		this.mountRoutes();
@@ -292,28 +299,11 @@ export class ExpressApp implements IApp {
 		}
 	}
 
-	public listen(
-		callback?: (port: number) => void
-	): this {
-		let {port} = this.manifest.server;
-		this.expressInstance.listen(
-			port,
-			() => {
-				if (callback) {
-					callback(
-						port
-					);
-				}
-			}
-		);
-		return this;
-	}
-
 	public start(
 		callback?: (port: number) => void
 	): this {
 		let {port} = this.manifest.server;
-		this.expressInstance.listen(
+		this.httpServer.listen(
 			port,
 			() => {
 				if (callback) {
@@ -333,18 +323,8 @@ export class ExpressApp implements IApp {
 			return;
 		}
 
-		if (this.manifest.socket.secure) {
-			this.socketServer = https.createServer(
-				expressInstance
-			);
-		} else {
-			this.socketServer = http.createServer(
-				expressInstance
-			);
-		}
-
 		this.socketIO = require("socket.io")(
-			this.socketServer
+			this.httpServer
 		);
 
 		this.socketIO!.on(
@@ -376,26 +356,6 @@ export class ExpressApp implements IApp {
 						}
 					);
 				});
-			}
-		);
-	}
-
-	public listenSocket(
-		callback?: (port: number) => void
-	) {
-		if (!this.manifest.socket || !this.socketServer) {
-			return;
-		}
-
-		let {port} = this.manifest.socket;
-		this.socketServer.listen(
-			port,
-			() => {
-				if (callback) {
-					callback(
-						port
-					);
-				}
 			}
 		);
 	}
