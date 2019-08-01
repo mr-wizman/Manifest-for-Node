@@ -3,5 +3,5 @@ export {
 } from "./app.interface";
 
 export {
-	ExpressApp
-} from "./express-app";
+	App
+} from "./app";

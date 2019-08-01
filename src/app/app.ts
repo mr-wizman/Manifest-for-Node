@@ -28,12 +28,12 @@ import * as store from "../store";
 
 import * as handlebars from "hbs";
 
-export class ExpressApp implements IApp {
+export class App implements IApp {
 
 	public static configure(
 		manifest: Manifest | null = null
-	): ExpressApp {
-		return new ExpressApp(
+	): App {
+		return new App(
 			manifest ? manifest : store.getDefaultManifest()
 		);
 	}

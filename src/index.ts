@@ -4,7 +4,7 @@ export {
 
 export {
 	IApp,
-	ExpressApp
+	App
 } from "./app/index";
 
 export {
