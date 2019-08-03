@@ -22,11 +22,17 @@
 
 Type in Terminal:
 
-`npm install --save @imatyushkin/manifest`
+```
+npm install --save @imatyushkin/manifest express express-hbs hbs socket.io
+npm install --save-dev @types/express @types/hbs @types/socket.io
+```
 
 or, if you prefer `yarn` over `npm`, type:
 
-`yarn add @imatyushkin/manifest`
+```
+yarn add @imatyushkin/manifest express express-hbs hbs socket.io
+yarn add @types/express @types/hbs @types/socket.io --dev
+```
 
 ## Requirements
 
