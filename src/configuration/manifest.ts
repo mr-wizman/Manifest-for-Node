@@ -23,6 +23,8 @@ export type Manifest = {
 		readonly currentViewEngine: viewEngines.ViewEngine
 	},
 	readonly socket?: {
+		readonly onConnected?: (socket: SocketIO.Socket) => void,
+		readonly onDisconnected?: (socket: SocketIO.Socket) => void,
 		readonly events: socket.EventHandler[]
 	},
 	readonly analytics: {

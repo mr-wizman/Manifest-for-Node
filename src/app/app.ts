@@ -319,7 +319,9 @@ export class App implements IApp {
 	private setupSocket(
 		expressInstance: express.Express
 	) {
-		if (!this.manifest.socket) {
+		const socketConfiguration = this.manifest.socket;
+
+		if (!socketConfiguration) {
 			return;
 		}
 
@@ -342,6 +344,12 @@ export class App implements IApp {
 						if (index >= 0) {
 							this.sockets.splice(index, 1);
 						}
+
+						if (socketConfiguration.onDisconnected) {
+							socketConfiguration.onDisconnected(
+								socket
+							);
+						}
 					}
 				);
 
@@ -356,6 +364,12 @@ export class App implements IApp {
 						}
 					);
 				});
+
+				if (socketConfiguration.onConnected) {
+					socketConfiguration.onConnected(
+						socket
+					);
+				}
 			}
 		);
 	}
