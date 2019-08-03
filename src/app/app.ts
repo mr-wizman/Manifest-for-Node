@@ -374,6 +374,10 @@ export class App implements IApp {
 		);
 	}
 
+	public getSocketIO(): SocketIO.Server | undefined {
+		return this.socketIO;
+	}
+
 	public getSocketIDs(): string[] {
 		return this.sockets
 			.map((socket) => {
