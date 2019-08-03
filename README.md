@@ -30,7 +30,10 @@ or, if you prefer `yarn` over `npm`, type:
 
 ## Requirements
 
-No special requirements.
+- [express](https://expressjs.com)
+- [express-hbs](https://www.npmjs.com/package/express-hbs)
+- [hbs](https://www.npmjs.com/package/hbs)
+- [socket.io](https://socket.io)
 
 ## Usage
 
