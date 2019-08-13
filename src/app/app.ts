@@ -133,6 +133,20 @@ export class App implements IApp {
 						true
 					);
 				}
+			} else if (io_response.isAsyncCustomResponse(response)) {
+				response.asyncHandler(
+					expressIO.request,
+					expressIO.response,
+					(result) => {
+						if (result) {
+							applyResponse(
+								result,
+								expressIO,
+								true
+							);
+						}
+					}
+				);
 			} else if (io_response.isTextResponse(response)) {
 				let textResponse = response as io_response.TextResponse;
 

@@ -4,6 +4,11 @@ export {
 } from "./custom-response";
 
 export {
+	AsyncCustomResponse,
+	isAsyncCustomResponse
+} from "./async-custom-response";
+
+export {
 	TextResponse,
 	isTextResponse
 } from "./text-response"

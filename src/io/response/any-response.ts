@@ -3,6 +3,10 @@ import {
 } from "./custom-response";
 
 import {
+	AsyncCustomResponse
+} from "./async-custom-response";
+
+import {
 	TextResponse
 } from "./text-response";
 
@@ -19,6 +23,7 @@ import {
 } from "./redirect-response";
 
 export type AnyResponse = CustomResponse
+	| AsyncCustomResponse
 	| TextResponse
 	| JsonResponse
 	| PageResponse
