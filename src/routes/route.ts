@@ -4,6 +4,7 @@ import {
 
 export type Route = {
 	url: string,
+	corsEnabled?: boolean,
 	methods: {
 		get?: AnyResponse,
 		post?: AnyResponse,

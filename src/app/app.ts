@@ -26,6 +26,8 @@ import * as expressVendor from "../vendors/express";
 
 import * as store from "../store";
 
+import cors from "cors";
+
 import * as handlebars from "hbs";
 
 export class App implements IApp {
@@ -60,6 +62,12 @@ export class App implements IApp {
 			? https.createServer(this.expressInstance)
 			: http.createServer(this.expressInstance);
 		this.sockets = [];
+
+		if (manifest.server.corsEnabled) {
+			this.expressInstance.use(
+				cors()
+			);
+		}
 
 		this.addStaticLocations();
 		this.insertRequestHandlers();
@@ -201,10 +209,15 @@ export class App implements IApp {
 			}
 		};
 
+		const emptyHandler = (request: express.Request, response: any, next: any) => {
+			next();
+		};
+
 		this.manifest.server.routes.forEach((route) => {
 			if (route.methods.get) {
 				this.router.get(
 					route.url,
+					route.corsEnabled ? cors() : emptyHandler,
 					(request, response) => {
 						let methodHandler = route.methods.get!;
 						applyResponse(
@@ -222,6 +235,7 @@ export class App implements IApp {
 			if (route.methods.post) {
 				this.router.post(
 					route.url,
+					route.corsEnabled ? cors() : emptyHandler,
 					(request, response) => {
 						let methodHandler = route.methods.post!;
 						applyResponse(
@@ -239,6 +253,7 @@ export class App implements IApp {
 			if (route.methods.put) {
 				this.router.put(
 					route.url,
+					route.corsEnabled ? cors() : emptyHandler,
 					(request, response) => {
 						let methodHandler = route.methods.put!;
 						applyResponse(
@@ -256,6 +271,7 @@ export class App implements IApp {
 			if (route.methods.delete) {
 				this.router.delete(
 					route.url,
+					route.corsEnabled ? cors() : emptyHandler,
 					(request, response) => {
 						let methodHandler = route.methods.delete!;
 						applyResponse(
