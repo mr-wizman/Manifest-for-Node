@@ -63,12 +63,6 @@ export class App implements IApp {
 			: http.createServer(this.expressInstance);
 		this.sockets = [];
 
-		if (manifest.server.corsEnabled) {
-			this.expressInstance.use(
-				cors()
-			);
-		}
-
 		this.addStaticLocations();
 		this.insertRequestHandlers();
 		this.mountRoutes();
