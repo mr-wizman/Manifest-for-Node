@@ -323,23 +323,6 @@ export class App implements IApp {
 		}
 	}
 
-	public start(
-		callback?: (port: number) => void
-	): this {
-		let {port} = this.manifest.server;
-		this.httpServer.listen(
-			port,
-			() => {
-				if (callback) {
-					callback(
-						port
-					);
-				}
-			}
-		);
-		return this;
-	}
-
 	private setupSocket(
 		expressInstance: express.Express
 	) {
@@ -396,6 +379,27 @@ export class App implements IApp {
 				}
 			}
 		);
+	}
+
+	public start(
+		callback?: (port: number) => void
+	): this {
+		let {port} = this.manifest.server;
+		this.httpServer.listen(
+			port,
+			() => {
+				if (callback) {
+					callback(
+						port
+					);
+				}
+			}
+		);
+		return this;
+	}
+
+	public getHttpServer(): http.Server | https.Server {
+		return this.httpServer;
 	}
 
 	public getSocketIO(): SocketIO.Server | undefined {
