@@ -16,8 +16,6 @@ import * as io_request from "../io/request";
 
 import * as io_response from "../io/response";
 
-import * as socketEngine from "../socket";
-
 import * as viewEngines from "../view-engines";
 
 import * as analytics from "../analytics";
@@ -27,8 +25,6 @@ import * as expressVendor from "../vendors/express";
 import * as store from "../store";
 
 import cors from "cors";
-
-import * as handlebars from "hbs";
 
 export class App implements IApp {
 
@@ -46,11 +42,7 @@ export class App implements IApp {
 
 	private readonly requestHandlers: io_request.RequestHandler[];
 
-	private httpServer: http.Server | https.Server;
-
-	private socketIO?: SocketIO.Server;
-
-	private readonly sockets: SocketIO.Socket[];
+	private server: http.Server | https.Server;
 
 	private constructor(
 		private readonly manifest: Manifest
@@ -58,18 +50,14 @@ export class App implements IApp {
 		this.expressInstance = express();
 		this.router = express.Router();
 		this.requestHandlers = [];
-		this.httpServer = manifest.server.secure
+		this.server = manifest.server.secure
 			? https.createServer(this.expressInstance)
 			: http.createServer(this.expressInstance);
-		this.sockets = [];
 
 		this.addStaticLocations();
 		this.insertRequestHandlers();
 		this.mountRoutes();
 		this.setupViewEngine();
-		this.setupSocket(
-			this.expressInstance
-		);
 	}
 
 	private addStaticLocations() {
@@ -296,17 +284,17 @@ export class App implements IApp {
 	}
 
 	private setupViewEngine() {
-		switch (this.manifest.server.currentViewEngine) {
+		switch (this.manifest.server.viewEngines.current) {
 			case viewEngines.ViewEngine.handlebars: {
-				let configuration = this.manifest.server.viewEngines.handlebars;
+				let configuration = this.manifest.server.viewEngines.settings
+					&& this.manifest.server.viewEngines.settings.handlebars;
 
 				if (configuration) {
-					let {partialsDir} = configuration;
 					var expressHbs = require("express-hbs");
 					this.expressInstance.engine(
 						"hbs",
 						expressHbs.express4({
-							partialsDir: partialsDir
+							partialsDir: configuration.partialsDir
 						})
 					);
 				}
@@ -323,69 +311,11 @@ export class App implements IApp {
 		}
 	}
 
-	private setupSocket(
-		expressInstance: express.Express
-	) {
-		const socketConfiguration = this.manifest.socket;
-
-		if (!socketConfiguration) {
-			return;
-		}
-
-		this.socketIO = require("socket.io")(
-			this.httpServer
-		);
-
-		this.socketIO!.on(
-			"connection",
-			(socket: SocketIO.Socket) => {
-				this.sockets.push(
-					socket
-				);
-
-				socket.on(
-					"disconnect",
-					() => {
-						let index = this.sockets.indexOf(socket);
-						
-						if (index >= 0) {
-							this.sockets.splice(index, 1);
-						}
-
-						if (socketConfiguration.onDisconnected) {
-							socketConfiguration.onDisconnected(
-								socket
-							);
-						}
-					}
-				);
-
-				this.manifest.socket!.events.forEach((event) => {
-					socket.on(
-						event.name,
-						(data) => {
-							event.handler(
-								data,
-								socket.id
-							);
-						}
-					);
-				});
-
-				if (socketConfiguration.onConnected) {
-					socketConfiguration.onConnected(
-						socket
-					);
-				}
-			}
-		);
-	}
-
 	public start(
 		callback?: (port: number) => void
 	): this {
 		let {port} = this.manifest.server;
-		this.httpServer.listen(
+		this.server.listen(
 			port,
 			() => {
 				if (callback) {
@@ -398,58 +328,7 @@ export class App implements IApp {
 		return this;
 	}
 
-	public getHttpServer(): http.Server | https.Server {
-		return this.httpServer;
-	}
-
-	public getSocketIO(): SocketIO.Server | undefined {
-		return this.socketIO;
-	}
-
-	public getSocketIDs(): string[] {
-		return this.sockets
-			.map((socket) => {
-				return socket.id;
-			});
-	}
-
-	public getSocketById(id: string): SocketIO.Socket | null {
-		let index = this.sockets.findIndex((socket) => {
-			return socket.id === id;
-		});
-		return index >= 0 ? this.sockets[index] : null;
-	}
-
-	public sendSocketMessage(message: socketEngine.Message) {
-		if (message.recipients) {
-			let sockets = message.recipients
-				.map((recipient) => {
-					return this.getSocketById(recipient);
-				})
-				.filter((socket) => {
-					return socket != null;
-				});
-			sockets.forEach((socket) => {
-				socket!.emit(
-					message.event,
-					message.data
-				);
-			})
-		} else {
-			if (this.socketIO) {
-				this.socketIO.emit(
-					message.event,
-					message.data
-				);
-			}
-		}
-	}
-
-	public disconnectSocketWithId(id: string) {
-		let socket = this.getSocketById(id);
-
-		if (socket) {
-			socket.disconnect(true);
-		}
+	public getServer(): http.Server | https.Server {
+		return this.server;
 	}
 }

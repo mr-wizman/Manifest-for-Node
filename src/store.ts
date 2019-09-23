@@ -28,8 +28,9 @@ export const getDefaultManifest: () => Manifest = () => {
 					}
 				}
 			],
-			viewEngines: {},
-			currentViewEngine: ViewEngine.handlebars
+			viewEngines: {
+				current: ViewEngine.handlebars
+			}
 		},
 		analytics: []
 	};
