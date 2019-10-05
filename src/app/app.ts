@@ -18,8 +18,6 @@ import * as io_response from "../io/response";
 
 import * as viewEngines from "../view-engines";
 
-import * as analytics from "../analytics";
-
 import * as expressVendor from "../vendors/express";
 
 import * as store from "../store";
@@ -28,7 +26,7 @@ import cors from "cors";
 
 export class App implements IApp {
 
-	public static configure(
+	public static create(
 		manifest: Manifest | null = null
 	): App {
 		return new App(
@@ -73,7 +71,7 @@ export class App implements IApp {
 
 	private insertRequestHandlers() {
 		this.expressInstance.use((request, response, next) => {
-			for (let handler of this.manifest.server.requestHandlers) {
+			for (let handler of this.manifest.io.handlers) {
 				handler(request);
 			}
 
@@ -95,7 +93,7 @@ export class App implements IApp {
 					: response.delay;
 
 				setTimeout(
-					function() {
+					function () {
 						applyResponse(
 							response,
 							expressIO,
@@ -110,8 +108,7 @@ export class App implements IApp {
 			// Check response type and handle it appropriately
 
 			if (io_response.isCustomResponse(response)) {
-				let customResponse = response as io_response.CustomResponse;
-				let result = customResponse.handler(
+				let result = response.handler(
 					expressIO.request,
 					expressIO.response
 				);
@@ -138,55 +135,39 @@ export class App implements IApp {
 					}
 				);
 			} else if (io_response.isTextResponse(response)) {
-				let textResponse = response as io_response.TextResponse;
-
-				if (textResponse.status) {
+				if (response.status) {
 					expressIO.response.status(
-						textResponse.status
+						response.status
 					);
 				}
 
 				expressIO.response.send(
-					textResponse.text
+					response.text
 				);
 			} else if (io_response.isJsonResponse(response)) {
-				let jsonResponse = response as io_response.JsonResponse;
-
-				if (jsonResponse.status) {
+				if (response.status) {
 					expressIO.response.status(
-						jsonResponse.status
+						response.status
 					);
 				}
 
 				expressIO.response.json(
-					jsonResponse.json
+					response.json
 				);
 			} else if (io_response.isPageResponse(response)) {
-				let pageResponse = response as io_response.PageResponse;
-
-				if (pageResponse.data) {
-					pageResponse.data.analyticsHtml = pageResponse.data.analyticsId
-						.map((id) => {
-							return new analytics.AnalyticsRenderer()
-								.getHtmlForSingleAnalytics(id)
-						});
-				}
-
-				if (pageResponse.status) {
+				if (response.status) {
 					expressIO.response.status(
-						pageResponse.status
+						response.status
 					);
 				}
 
 				expressIO.response.render(
-					pageResponse.path,
-					pageResponse.data
+					response.path,
+					response.data
 				);
 			} else if (io_response.isRedirectResponse(response)) {
-				let redirectResponse = response as io_response.RedirectResponse;
-
 				expressIO.response.redirect(
-					redirectResponse.redirectTo
+					response.redirectTo
 				);
 			}
 		};
@@ -195,7 +176,7 @@ export class App implements IApp {
 			next();
 		};
 
-		this.manifest.server.routes.forEach((route) => {
+		this.manifest.io.routes.forEach((route) => {
 			if (route.methods.get) {
 				this.router.get(
 					route.url,
@@ -284,10 +265,10 @@ export class App implements IApp {
 	}
 
 	private setupViewEngine() {
-		switch (this.manifest.server.viewEngines.current) {
+		switch (this.manifest.viewEngines.current) {
 			case viewEngines.ViewEngine.handlebars: {
-				let configuration = this.manifest.server.viewEngines.settings
-					&& this.manifest.server.viewEngines.settings.handlebars;
+				let configuration = this.manifest.viewEngines.settings
+					&& this.manifest.viewEngines.settings.handlebars;
 
 				if (configuration) {
 					var expressHbs = require("express-hbs");
@@ -314,7 +295,7 @@ export class App implements IApp {
 	public start(
 		callback?: (port: number) => void
 	): this {
-		let {port} = this.manifest.server;
+		let { port } = this.manifest.server;
 		this.server.listen(
 			port,
 			() => {

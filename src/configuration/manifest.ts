@@ -12,18 +12,19 @@ export type Manifest = {
 	readonly server: {
 		readonly port: number,
 		readonly secure: boolean,
-		readonly staticLocations: server.StaticLocation[],
-		readonly requestHandlers: request.RequestHandler[],
-		readonly routes: routes.Route[],
-		readonly viewEngines: {
-			readonly current: viewEngines.ViewEngine,
-			readonly settings?: {
-				readonly handlebars?: handlebars.Configuration
-			}
+		readonly staticLocations: server.StaticLocation[]
+	},
+	readonly viewEngines: {
+		readonly current: viewEngines.ViewEngine,
+		readonly settings?: {
+			readonly handlebars?: handlebars.Configuration
 		}
 	},
-	readonly analytics: {
-		readonly id: string,
-		readonly html: string
-	}[]
+	readonly io: {
+		readonly handlers: request.RequestHandler[],
+		readonly routes: routes.Route[]
+	},
+	readonly blacklist?: {
+		ip: string[]
+	}
 };

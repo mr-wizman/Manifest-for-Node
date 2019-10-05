@@ -43,14 +43,14 @@ yarn add @types/express @types/hbs @types/socket.io --dev
 
 ## Usage
 
-### Launching Server
+### Launching App
 
 The simplest way to start Express server:
 
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
 
-mfst.ExpressApp.configure().start();
+mfst.ExpressApp.create().start();
 ```
 
 Open [localhost:3000](http://localhost:3000) in your browser. You will see a message saying `Built with Manifest framework`.
@@ -72,11 +72,18 @@ Now let's learn how to configure our server:
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
 
-let app = mfst.ExpressApp.configure({
+let app = mfst.ExpressApp.create({
 	server: {
 		port: 3000,
-		staticLocations: [],
-		requestHandlers: [],
+		secure: false,
+		corsEnabled: true,
+		staticLocations: []
+	},
+	viewEngines: {
+		current: ViewEngine.handlebars
+	},
+	io: {
+		handlers: [],
 		routes: [
 			{
 				url: `/`,
@@ -97,12 +104,7 @@ let app = mfst.ExpressApp.configure({
 				}
 			}
 		],
-		viewEngines: {
-		},
-		currentViewEngine: mfst.ViewEngine.handlebars
-	},
-	analytics: [
-	]
+	}
 });
 
 app.start();
@@ -115,6 +117,10 @@ In the above example you can see a very simple configuration that is enough to l
 #### `server.port`
 
 Port number that server will be listen to.
+
+#### `server.secure`
+
+If `true`, HTTPS will be used under the hood. Otherwise, we'll use unsecure HTTP.
 
 #### `server.staticLocations`
 
@@ -133,7 +139,7 @@ Example:
 }
 ```
 
-#### `server.requestHandlers`
+#### `io.handlers`
 
 Array of lambda functions. Each function has `request` parameter and handles request before it's processed by `Manifest` framework. You can use handlers for any purpose. For example, sending request information to the console output:
 
@@ -145,7 +151,7 @@ requestHandlers: [
 ]
 ```
 
-#### `server.routes`
+#### `io.routes`
 
 Array of objects. Each object represents a different route. Example:
 
@@ -157,14 +163,21 @@ Array of objects. Each object represents a different route. Example:
 			methods: {
 				get: {
 					text: "Hello!"
+				},
+				post: {
+					text: "Post response."
+				},
+				put: {
+					text: "Put response."
+				},
+				delete: {
+					text: "Delete response."
 				}
 			}
 		}
 	]
 }
 ```
-
-#### `server.routes[0].methods`
 
 The `methods` object can include any of these HTTP methods:
 
@@ -173,25 +186,200 @@ The `methods` object can include any of these HTTP methods:
 - `put`
 - `delete`
 
-Each HTTP method describes the response to client's request. There are 5 types of response:
+Each HTTP method describes the response to client's request. `Manifest` supports 5 types of response:
 
 - Text (returns simple text)
 - JSON (returns JSON object or array)
 - Page (returns page and data for server-side rendering)
 - Redirect (sends command for redirection to another URL)
-- Custom (arrow function that is implemented by developer and returns any of the 4 types above)
+- Custom (arrow function that is implemented by developer and returns text or JSON or page response)
+- Custom asynchronous (arrow function that is implemented by developer and returns text or JSON or page response by using callback)
 
-#### `server.viewEngines`
+Example of text response:
 
-Documentation will be added soon.
+```typescript
+{
+	routes: [
+		{
+			url: `/profile`,
+			methods: {
+				get: {
+					text: "<h1>John Green</h1>"
+				}
+			}
+		}
+	]
+}
+```
 
-#### `server.currentViewEngine`
+JSON response:
 
-Documentation will be added soon.
+```typescript
+{
+	routes: [
+		{
+			url: `/profile`,
+			methods: {
+				get: {
+					json: {
+						first_name: "John",
+						last_name: "Green"
+					}
+				}
+			}
+		}
+	]
+}
+```
 
-#### `analytics`
+Page response:
 
-Documentation will be added soon.
+```typescript
+{
+	routes: [
+		{
+			url: `/profile`,
+			methods: {
+				get: {
+					path: `${__dirname}/views/profile.hbs`,
+					data: {
+						// Optional data that will be used by Handlebars engine.
+						firstName: "John",
+						lastName: "Green"
+					}
+				}
+			}
+		}
+	]
+}
+```
+
+Redirect response:
+
+```typescript
+{
+	routes: [
+		{
+			url: `/profile`,
+			methods: {
+				get: {
+					redirectTo: "/not_found"
+				}
+			}
+		}
+	]
+}
+```
+
+Custom response:
+
+```typescript
+{
+	routes: [
+		{
+			url: `/profile`,
+			methods: {
+				get: {
+					handler: (request, response) => {
+						let firstName = "John";
+						let lastName = "Green";
+
+						// We have to return text or JSON or page response here.
+						return {
+							json: {
+								first_name: firstName,
+								last_name: lastName
+							}
+						};
+					}
+				}
+			}
+		}
+	]
+}
+```
+
+Custom asynchronous response:
+
+```typescript
+{
+	routes: [
+		{
+			url: `/profile`,
+			methods: {
+				get: {
+					asyncHandler: (request, response, callback) => {
+						let firstName = "John";
+						let lastName = "Green";
+						
+						// Return response using callback.
+						callback({
+							json: {
+								first_name: firstName,
+								last_name: lastName
+							}
+						});
+					}
+				}
+			}
+		}
+	]
+}
+```
+
+Also, most of response types support optional parameters:
+
+- `status`: HTTP status, by default 200
+- `delay`: The duration in milliseconds of delay before returning response.
+
+Example of using custom HTTP status:
+
+```typescript
+{
+	routes: [
+		{
+			url: `/profile`,
+			methods: {
+				get: {
+					text: "<h1>Not found</h1>",
+					status: 404
+				}
+			}
+		}
+	]
+}
+```
+
+Sometimes you might want to simulate slow server. Use `delay` for this purpose:
+
+```typescript
+{
+	routes: [
+		{
+			url: `/profile`,
+			methods: {
+				get: {
+					json: {
+						first_name: "John",
+						last_name: "Green"
+					},
+					delay: 4000
+				}
+			}
+		}
+	]
+}
+```
+
+#### `server.viewEngines.current`
+
+The current view engine. Currently supports `ViewEngine.handlebars` only.
+
+#### `server.viewEngines.settings.handlebars`
+
+Configuration for Handlebars view engine. Includes parameters:
+
+- `partialsDir`: Path to partials directory.
 
 ## License
 

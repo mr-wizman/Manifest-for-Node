@@ -1,8 +1,4 @@
 export {
-	IAnalyticsProvider
-} from "./analytics";
-
-export {
 	IApp,
 	App
 } from "./app/index";
@@ -31,10 +27,6 @@ export {
 export {
 	StaticLocation
 } from "./server";
-
-export {
-	YandexMetrika
-} from "./vendors/yandex/metrika";
 
 export {
 	ViewEngine
