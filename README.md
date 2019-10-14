@@ -50,7 +50,7 @@ The simplest way to start Express server:
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
 
-mfst.ExpressApp.create().start();
+mfst.App.create().start();
 ```
 
 Open [localhost:3000](http://localhost:3000) in your browser. You will see a message saying `Built with Manifest framework`.
@@ -72,7 +72,7 @@ Now let's learn how to configure our server:
 ```typescript
 import * as mfst from "@imatyushkin/manifest";
 
-let app = mfst.ExpressApp.create({
+let app = mfst.App.create({
 	server: {
 		port: 3000,
 		secure: false,
