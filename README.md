@@ -57,7 +57,7 @@ Open [localhost:3000](http://localhost:3000) in your browser. You will see a mes
 
 That's all! The server is launched 🚀
 
-For any personal purposes, you can access `Express` instance by calling
+By the way, you can access `Express` instance directly by calling
 
 ```typescript
 app.expressInstance
